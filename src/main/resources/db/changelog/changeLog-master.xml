@@ -1,0 +1,31 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.10.xsd">
+
+  <changeSet author="Vyacheslav" id="20230113-00">
+    <preConditions onFail="HALT">
+      <not>
+        <tableExists tableName="city_list"/>
+      </not>
+    </preConditions>
+    <createTable tableName="city_list">
+      <column name="id" type="BIGINT">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="city_list_pkey"/>
+      </column>
+      <column name="city_name" type="VARCHAR(50)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="photo_url" type="VARCHAR(1000)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet author="Vyacheslav" id="20230113-01" labels="data">
+    <preConditions onFail="HALT">
+        <tableExists tableName="city_list"/>
+    </preConditions>
+    <loadData file="cities.csv" primaryKey="id" tableName="city_list"/>
+  </changeSet>
+</databaseChangeLog>
