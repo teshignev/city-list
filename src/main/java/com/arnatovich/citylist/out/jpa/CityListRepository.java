@@ -7,4 +7,8 @@ import org.springframework.data.domain.Pageable;
 public interface CityListRepository {
 
   Page<CityDto> findCities(Pageable pageable);
+
+  CityDto findCityById(Long id);
+
+  CityDto updateCityById(Long id, String cityName, String photoUrl);
 }

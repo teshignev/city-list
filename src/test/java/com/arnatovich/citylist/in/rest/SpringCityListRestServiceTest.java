@@ -1,5 +1,7 @@
 package com.arnatovich.citylist.in.rest;
 
+import static com.arnatovich.citylist.in.rest.SpringCityListRestService.SORTING_ID;
+import static com.arnatovich.citylist.out.jpa.CityListRepositoryImpl.CITY_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -9,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import com.arnatovich.citylist.fixture.CityFixture;
 import com.arnatovich.citylist.in.dto.CityDto;
+import com.arnatovich.citylist.in.exception.RestNotFoundException;
 import com.arnatovich.citylist.out.jpa.CityListRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -34,14 +38,14 @@ public class SpringCityListRestServiceTest {
     int pageNumber = 0;
     int pageSize = 3;
 
-    when(repository.findCities(PageRequest.of(pageNumber, pageSize)))
+    when(repository.findCities(PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_ID).ascending())))
         .thenReturn(CityFixture.pageOfCities(pageNumber, pageSize));
 
-    ResponseEntity<Page<CityDto>> pageResponseEntity = target.retrieveCities(pageNumber, pageSize);
+    ResponseEntity<Page<CityDto>> response = target.retrieveCities(pageNumber, pageSize);
 
-    verify(repository).findCities(PageRequest.of(pageNumber, pageSize));
+    verify(repository).findCities(PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_ID).ascending()));
     verifyNoMoreInteractions(repository);
-    assertEquals(HttpStatus.OK, pageResponseEntity.getStatusCode());
+    assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 
   @Test
@@ -72,5 +76,52 @@ public class SpringCityListRestServiceTest {
     assertThrows(IllegalArgumentException.class, () -> target.retrieveCities(pageNumber, pageSize));
 
     verifyNoInteractions(repository);
+  }
+
+  @Test
+  void retrieveCityById() {
+    when(repository.findCityById(CityFixture.ID))
+        .thenReturn(CityFixture.cityDto());
+
+    ResponseEntity<CityDto> response = target.retrieveCityById(CityFixture.ID);
+
+    verify(repository).findCityById(CityFixture.ID);
+    verifyNoMoreInteractions(repository);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
+
+  @Test
+  void notFoundCityById() {
+    when(repository.findCityById(CityFixture.ID))
+        .thenThrow(new RestNotFoundException(CITY_NOT_FOUND));
+
+    assertThrows(RestNotFoundException.class, () -> target.retrieveCityById(CityFixture.ID));
+
+    verify(repository).findCityById(CityFixture.ID);
+    verifyNoMoreInteractions(repository);
+  }
+
+  @Test
+  void updateCityById() {
+    when(repository.updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL))
+        .thenReturn(CityFixture.cityDto());
+
+    ResponseEntity<CityDto> response = target.updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL);
+
+    verify(repository).updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL);
+    verifyNoMoreInteractions(repository);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
+  }
+
+  @Test
+  void notUpdateCityById() {
+    when(repository.updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL))
+        .thenThrow(new RestNotFoundException(CITY_NOT_FOUND));
+
+    assertThrows(RestNotFoundException.class, () -> target.updateCityById(CityFixture.ID, CityFixture.CITY_NAME,
+        CityFixture.PHOTO_URL));
+
+    verify(repository).updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL);
+    verifyNoMoreInteractions(repository);
   }
 }

@@ -1,10 +1,14 @@
 package com.arnatovich.citylist.out.jpa.repository;
 
+import static com.arnatovich.citylist.fixture.CityFixture.PAGE_NUMBER;
+import static com.arnatovich.citylist.fixture.CityFixture.PAGE_SIZE;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import com.arnatovich.citylist.fixture.CityFixture;
+import com.arnatovich.citylist.in.exception.RestNotFoundException;
 import com.arnatovich.citylist.out.jpa.CityListRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,15 +28,62 @@ public class CityListRepositoryImplTest {
 
   @Test
   void returnAllCities() {
-    int pageNumber = 0;
-    int pageSize = 10;
 
-    when(partRepository.findAll(PageRequest.of(pageNumber, pageSize)))
-        .thenReturn(CityFixture.pageOfCitiEntities(pageNumber, pageSize));
+    when(partRepository.findAll(PageRequest.of(PAGE_NUMBER, PAGE_SIZE)))
+        .thenReturn(CityFixture.pageOfCitiEntities(PAGE_NUMBER, PAGE_SIZE));
 
-    target.findCities(PageRequest.of(pageNumber, pageSize));
+    target.findCities(PageRequest.of(PAGE_NUMBER, PAGE_SIZE));
 
-    verify(partRepository).findAll(PageRequest.of(pageNumber, pageSize));
+    verify(partRepository).findAll(PageRequest.of(PAGE_NUMBER, PAGE_SIZE));
+    verifyNoMoreInteractions(partRepository);
+  }
+
+  @Test
+  void findCityById() {
+
+    when(partRepository.findById(CityFixture.ID))
+        .thenReturn(CityFixture.cityOptional());
+
+    target.findCityById(CityFixture.ID);
+
+    verify(partRepository).findById(CityFixture.ID);
+    verifyNoMoreInteractions(partRepository);
+  }
+
+  @Test
+  void notFindCityById() {
+
+    when(partRepository.findById(CityFixture.ID))
+        .thenReturn(CityFixture.emptyCityOptional());
+
+    assertThrows(RestNotFoundException.class, () -> target.findCityById(CityFixture.ID));
+
+    verify(partRepository).findById(CityFixture.ID);
+    verifyNoMoreInteractions(partRepository);
+  }
+
+  @Test
+  void updateCityById() {
+
+    when(partRepository.updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL))
+        .thenReturn(CityFixture.cityOptional());
+
+    target.updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL);
+
+    verify(partRepository).updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL);
+    verifyNoMoreInteractions(partRepository);
+  }
+
+  @Test
+  void notUpdateCityById() {
+
+    when(partRepository.updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL))
+        .thenReturn(CityFixture.emptyCityOptional());
+
+    assertThrows(RestNotFoundException.class, () -> target.updateCityById(CityFixture.ID, CityFixture.CITY_NAME,
+        CityFixture.PHOTO_URL));
+
+    verify(partRepository).updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL);
     verifyNoMoreInteractions(partRepository);
   }
 }
