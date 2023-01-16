@@ -35,4 +35,11 @@ public class CityListRepositoryImpl implements CityListRepository {
 
     return CityDtoMapper.INSTANCE.map(cityEntity);
   }
+
+  @Override
+  public Page<CityDto> findCitiesByName(String cityName, Pageable pageable) {
+
+    return partRepository.findByCityNameContainingIgnoreCase(cityName, pageable)
+        .map(CityDtoMapper.INSTANCE::map);
+  }
 }

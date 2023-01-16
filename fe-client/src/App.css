@@ -2,17 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #282c34;
   min-height: 30vh;
@@ -28,11 +17,29 @@
   color: #61dafb;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+
+.SubHeader {
+  margin: 4vh;
+}
+
+.SwitchPage, .PageNumber {
+  margin-left: 2vh;
+  margin-right: 2vh;
+}
+
+.SearchBar {
+  margin-right: 10vh;
+  margin-bottom: 5vh;
+}
+
+.CityName {
+  margin-right: 40vh;
+}
+
+.CityHeader {
+  margin-bottom: 2vh;
+}
+
+.City {
+  margin-bottom: 8vh;
 }

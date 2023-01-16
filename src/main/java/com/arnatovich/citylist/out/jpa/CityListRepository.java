@@ -11,4 +11,6 @@ public interface CityListRepository {
   CityDto findCityById(Long id);
 
   CityDto updateCityById(Long id, String cityName, String photoUrl);
+
+  Page<CityDto> findCitiesByName(String cityName, Pageable pageable);
 }

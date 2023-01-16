@@ -86,4 +86,16 @@ public class CityListRepositoryImplTest {
     verify(partRepository).updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL);
     verifyNoMoreInteractions(partRepository);
   }
+
+  @Test
+  void findCitiesByName() {
+
+    when(partRepository.findByCityNameContainingIgnoreCase(CityFixture.CITY_NAME, PageRequest.of(PAGE_NUMBER, PAGE_SIZE)))
+        .thenReturn(CityFixture.pageOfCitiEntities(PAGE_NUMBER, PAGE_SIZE));
+
+    target.findCitiesByName(CityFixture.CITY_NAME, PageRequest.of(PAGE_NUMBER, PAGE_SIZE));
+
+    verify(partRepository).findByCityNameContainingIgnoreCase(CityFixture.CITY_NAME, PageRequest.of(PAGE_NUMBER, PAGE_SIZE));
+    verifyNoMoreInteractions(partRepository);
+  }
 }

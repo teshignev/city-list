@@ -1,6 +1,6 @@
 package com.arnatovich.citylist.in.rest;
 
-import static com.arnatovich.citylist.in.rest.SpringCityListRestService.SORTING_ID;
+import static com.arnatovich.citylist.in.rest.SpringCityListRestService.SORTING_NAME;
 import static com.arnatovich.citylist.out.jpa.CityListRepositoryImpl.CITY_NOT_FOUND;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,12 +38,12 @@ public class SpringCityListRestServiceTest {
     int pageNumber = 0;
     int pageSize = 3;
 
-    when(repository.findCities(PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_ID).ascending())))
+    when(repository.findCities(PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_NAME).ascending())))
         .thenReturn(CityFixture.pageOfCities(pageNumber, pageSize));
 
     ResponseEntity<Page<CityDto>> response = target.retrieveCities(pageNumber, pageSize);
 
-    verify(repository).findCities(PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_ID).ascending()));
+    verify(repository).findCities(PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_NAME).ascending()));
     verifyNoMoreInteractions(repository);
     assertEquals(HttpStatus.OK, response.getStatusCode());
   }
@@ -123,5 +123,20 @@ public class SpringCityListRestServiceTest {
 
     verify(repository).updateCityById(CityFixture.ID, CityFixture.CITY_NAME, CityFixture.PHOTO_URL);
     verifyNoMoreInteractions(repository);
+  }
+
+  @Test
+  void retrieveCitiesByName() {
+    int pageNumber = 0;
+    int pageSize = 3;
+
+    when(repository.findCitiesByName(CityFixture.CITY_NAME, PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_NAME).ascending())))
+        .thenReturn(CityFixture.pageOfCities(pageNumber, pageSize));
+
+    ResponseEntity<Page<CityDto>> response = target.retrieveCities(CityFixture.CITY_NAME, pageNumber, pageSize);
+
+    verify(repository).findCitiesByName(CityFixture.CITY_NAME, PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_NAME).ascending()));
+    verifyNoMoreInteractions(repository);
+    assertEquals(HttpStatus.OK, response.getStatusCode());
   }
 }

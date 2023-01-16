@@ -28,6 +28,13 @@ public interface CityListRestService {
       @PositiveOrZero @RequestParam(required = false, defaultValue = DEFAULT_OFFSET) Integer offset,
       @Positive @RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize);
 
+  @GetMapping(path = "/filtered-city-list", produces = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseBody
+  ResponseEntity<Page<CityDto>> retrieveCities(
+      @NotBlank @RequestParam String cityName,
+      @PositiveOrZero @RequestParam(required = false, defaultValue = DEFAULT_OFFSET) Integer offset,
+      @Positive @RequestParam(required = false, defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize);
+
   @GetMapping(path = "/city", produces = MediaType.APPLICATION_JSON_VALUE)
   @ResponseBody
   ResponseEntity<CityDto> retrieveCityById(

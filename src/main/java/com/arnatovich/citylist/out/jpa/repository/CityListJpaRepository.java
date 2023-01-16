@@ -1,6 +1,8 @@
 package com.arnatovich.citylist.out.jpa.repository;
 
 import com.arnatovich.citylist.out.jpa.entity.CityEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -19,4 +21,6 @@ public interface CityListJpaRepository extends JpaRepository<CityEntity, Long> {
       @Param("id") Long id,
       @Param("cityName") String cityName,
       @Param("photoUrl") String photoUrl);
+
+  Page<CityEntity> findByCityNameContainingIgnoreCase(String cityName, Pageable pageable);
 }

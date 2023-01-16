@@ -12,14 +12,24 @@ import org.springframework.http.ResponseEntity;
 @RequiredArgsConstructor
 public class SpringCityListRestService implements CityListRestService {
 
-  public static final String SORTING_ID = "id";
+  public static final String SORTING_NAME = "cityName";
 
   private final CityListRepository repository;
 
   @Override
   public ResponseEntity<Page<CityDto>> retrieveCities(Integer pageNumber, Integer pageSize) {
 
-    Page<CityDto> cities = repository.findCities(PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_ID).ascending()));
+    Page<CityDto> cities = repository.findCities(PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_NAME).ascending()));
+
+    return new ResponseEntity<>(
+        cities,
+        HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<Page<CityDto>> retrieveCities(String cityName, Integer pageNumber, Integer pageSize) {
+
+    Page<CityDto> cities = repository.findCitiesByName(cityName, PageRequest.of(pageNumber, pageSize, Sort.by(SORTING_NAME).ascending()));
 
     return new ResponseEntity<>(
         cities,
