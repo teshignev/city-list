@@ -20,10 +20,12 @@
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
     <snakeyaml.version>1.33</snakeyaml.version>
     <validation-api.version>2.0.1.Final</validation-api.version>
     <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
     <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
+    <org.testcontainers.version>1.17.6</org.testcontainers.version>
   </properties>
 
   <dependencies>
@@ -67,7 +69,7 @@
     <dependency>
       <groupId>org.apache.maven.plugins</groupId>
       <artifactId>maven-compiler-plugin</artifactId>
-      <version>3.10.1</version>
+      <version>${maven-compiler-plugin.version}</version>
     </dependency>
 
     <!-- TEST -->
@@ -77,14 +79,44 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>${org.testcontainers.version}</version>
       <scope>test</scope>
     </dependency>
+
   </dependencies>
 
   <build>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <excludes>
+            <exclude>**/*EndpointTests</exclude>
+          </excludes>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <version>${maven-failsafe-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>integration-tests</id>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+            <configuration>
+              <includes>
+                <include>**/*EndpointTests.java</include>
+              </includes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>

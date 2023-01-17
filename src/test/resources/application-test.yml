@@ -8,10 +8,13 @@ info:
 # --------------------------------------------
 spring:
   datasource:
-    url: jdbc:h2:mem:test;DATABASE_TO_LOWER=TRUE;DEFAULT_NULL_ORDERING=HIGH;NON_KEYWORDS=KEY
-    username: sa
-    password:
-    driver-class-name: org.h2.Driver
+    username: root
+    password: admin
+    driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: classpath:/db/changelog/changeLog-test.xml
     enabled: false
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    hibernate:
+      ddl-auto: create
