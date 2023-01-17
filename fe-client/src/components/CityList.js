@@ -4,16 +4,12 @@ import { Link } from 'react-router-dom';
 
 const CityList = ({ cityList=[] }) => {
 
-  if (cityList === undefined) {
-    return <p className='Loading'>Loading...</p>;
-  }
-
   return (
       <>
         { cityList.map(city => (
             <div className='City' key={ city.id }>
               <div className='CityHeader'>
-                <line className='CityName'>{ city.cityName }</line>
+                <a className='CityName'>{ city.cityName }</a>
                 <Button size='sm' color='primary' tag={ Link }
                         to={ '/edit-city/' + city.id }>Edit</Button>
               </div>

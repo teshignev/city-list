@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import SearchPage from '../components/SearchPage';
 
-test('renders test link', () => {
-  render(<App />);
+test('renders component', () => {
+  render(<SearchPage />);
   const linkElement = screen.getByText(/City List/i);
   expect(linkElement).toBeInTheDocument();
 });
